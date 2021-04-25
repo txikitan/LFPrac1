@@ -5,20 +5,26 @@
 
   int apertura = 0;
   int cierre = 0;
-  int nombre = 0;
   int texto = 0;
   int atributo = 0;
+  int tagsunomasatributos = 0;
+  int caracteres_texto = 0;
 %}
 
 %%
 
-<[a-zA-Z_]+>  { apertura++; }
-<\/[a-zA-Z_]+> { cierre++; }
-[a-zA-Z_]+ { nombre++; }
-^[^><&"']+$ { texto++; }
-<[a-zA-Z_]+[ ]*[a-zA-Z_]+[ ]*=[ ]*["'][a-zA-Z_]+["']> { apertura++; atributo++;  }
+\<[a-zA-Z_]+/>   { apertura++; }
+\<[a-zA-Z_]+[ ]+ { apertura++; tagsunomasatributos++;}
+\<\/[a-zA-Z_]+> { cierre++; }
+[ ]*[a-zA-Z_]+[ ]*=[ ]*["'][a-zA-Z_]+["'] { atributo++; }
+>([^><&"']+)/<\/ { texto++; caracteres_texto += strlen(yytext); printf("texto es: %s \n",yytext);}
+
 
 %%
+
+int cuentaatributos(char *yytext) {
+
+}
 
 int main(int argc, char **argv)
 {
@@ -29,5 +35,5 @@ int main(int argc, char **argv)
     }
   }
   yylex();
-  printf("\naperturas = %d\ncierres = %d\nnombres = %d\ntexto = %d\ntextos = %d\natributos = %d\n", apertura, cierre, nombre, texto, atributo);
+  printf("\naperturas = %d\ncierres = %d\ntexto = %d\natributos = %d\nnum caracteres = %d\n", apertura, cierre, texto, atributo, caracteres_texto);
 }
