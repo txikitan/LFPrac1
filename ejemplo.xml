@@ -1,5 +1,6 @@
 <Genero gen = 'mujer' asdfsadf = 'aa'></Genero>
 <nombre compuesto="cieRto">MaríaJosé </nombre>
 <apellido>García Lluch</apellido>
-<telefono></telefono>
+<telefono sdfsd = "asdad"></telefono>
 <direccion>Calle San Francisco nº 28, 3‐5, 43010 Tarragona</direccion>
+<apellido></apellido>
