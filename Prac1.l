@@ -12,11 +12,11 @@
   int elementovacio = 0;
   int elementosimple = 0;
 %}
-APERTURA    \<[a-zA-Z_]+> 
-CIERRE      \<\/[a-zA-Z_]+>
-ATRIBUTO    [ ]*[a-zA-Z_]+[ ]*=[ ]*["'][a-zA-Z_]+["']  
+APERTURA    \<[a-zA-Z0-9_]+> 
+CIERRE      \<\/[a-zA-Z0-9_]+>
+ATRIBUTO    [ ]*[a-zA-Z0-9_]+[ ]*=[ ]*["'][a-zA-Z0-9_]+["']  
 TEXTO       ([^><&"']+)  
-APERTURATRIB     \<[a-zA-Z_]+   
+APERTURATRIB     \<[a-zA-Z0-9_]+   
 %%
 
 {APERTURA}  { apertura++; }
@@ -26,9 +26,9 @@ APERTURATRIB     \<[a-zA-Z_]+
 {APERTURATRIB}/[ ]+[^>]+>{TEXTO}{CIERRE} { apertura++; elementosimple++; tagsunomasatributos++;}
 {APERTURATRIB}[ ]+ { apertura++; tagsunomasatributos++;}
 {CIERRE} { cierre++; }
-> {}
 {ATRIBUTO} { atributo++; }
-{TEXTO}/<\/ { texto++; caracteres_texto += yyleng; printf("texto es: %s \n", yytext); }
+{TEXTO}/<\/ { texto++; caracteres_texto += yyleng; }
+> {}
 
 %%
 
@@ -41,5 +41,5 @@ int main(int argc, char **argv)
     }
   }
   yylex();
-  printf("\nAperturas = %d\nCierres = %d\nTexto = %d\nAtributos = %d\nNum caracteres = %d\nNum tags con mas de un atributo = %d\nNum elementos vacios = %d\nNum elementos simples = %d\n", apertura, cierre, texto, atributo, caracteres_texto, tagsunomasatributos, elementovacio, elementosimple);
+  printf("\nNum aperturas = %d\nNum cierres = %d\nNum textos = %d\nNum atributos = %d\nNum caracteres total = %d\nNum elementos con uno o mas atributos = %d\nNum elementos vacios = %d\nNum elementos simples = %d\n", apertura, cierre, texto, atributo, caracteres_texto, tagsunomasatributos, elementovacio, elementosimple);
 }
