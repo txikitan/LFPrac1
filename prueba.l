@@ -12,22 +12,23 @@
   int elementovacio = 0;
   int elementosimple = 0;
 %}
-
+APERTURA    \<[a-zA-Z_]+> 
+CIERRE      \<\/[a-zA-Z_]+>
+ATRIBUTO    [ ]*[a-zA-Z_]+[ ]*=[ ]*["'][a-zA-Z_]+["']  
+TEXTO       ([^><&"']+)  
+APERTURATRIB     \<[a-zA-Z_]+   
 %%
 
-\<[a-zA-Z_]+>   { apertura++; }
-
-\<[a-zA-Z_]+>/\<\/[a-zA-Z_]+> { apertura++; elementovacio++;}
-\<[a-zA-Z_]+/[ ]+[^>]+>\<\/[a-zA-Z_]+> { apertura++; elementovacio++; tagsunomasatributos++;}
-
-\<[a-zA-Z_]+>/([^><&"']+)\<\/[a-zA-Z_]+> { apertura++; elementosimple++;}
-\<[a-zA-Z_]+/[ ]+[^>]+>([^><&"']+)\<\/[a-zA-Z_]+> { apertura++; elementosimple++; tagsunomasatributos++;}
-
-\<[a-zA-Z_]+[ ]+ { apertura++; tagsunomasatributos++;}
-\<\/[a-zA-Z_]+> { cierre++; }
+{APERTURA}  { apertura++; }
+{APERTURA}/{CIERRE} { apertura++; elementovacio++;}
+{APERTURATRIB}/[ ]+[^>]+>{CIERRE} { apertura++; elementovacio++; tagsunomasatributos++;}
+{APERTURA}/{TEXTO}{CIERRE} { apertura++; elementosimple++;}
+{APERTURATRIB}/[ ]+[^>]+>{TEXTO}{CIERRE} { apertura++; elementosimple++; tagsunomasatributos++;}
+{APERTURATRIB}[ ]+ { apertura++; tagsunomasatributos++;}
+{CIERRE} { cierre++; }
 > {}
-[ ]*[a-zA-Z_]+[ ]*=[ ]*["'][a-zA-Z_]+["'] { atributo++; }
-([^><&"']+)/<\/ { texto++; caracteres_texto += yyleng; printf("texto es: %s \n", yytext); }
+{ATRIBUTO} { atributo++; }
+{TEXTO}/<\/ { texto++; caracteres_texto += yyleng; printf("texto es: %s \n", yytext); }
 
 %%
 
@@ -40,5 +41,5 @@ int main(int argc, char **argv)
     }
   }
   yylex();
-  printf("\naperturas = %d\ncierres = %d\ntexto = %d\natributos = %d\nnum caracteres = %d\n tags con mas de un atributo = %d\n elementos vacios = %d\n elementos simples = %d\n", apertura, cierre, texto, atributo, caracteres_texto, tagsunomasatributos, elementovacio, elementosimple);
+  printf("\nAperturas = %d\nCierres = %d\nTexto = %d\nAtributos = %d\nNum caracteres = %d\nNum tags con mas de un atributo = %d\nNum elementos vacios = %d\nNum elementos simples = %d\n", apertura, cierre, texto, atributo, caracteres_texto, tagsunomasatributos, elementovacio, elementosimple);
 }
