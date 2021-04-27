@@ -19,12 +19,10 @@ TEXTO       ([^><&"']+)
 APERTURATRIB     \<[a-zA-Z0-9_]+   
 %%
 
-{APERTURA}  { apertura++; }
 {APERTURA}/{CIERRE} { apertura++; elementovacio++;}
 {APERTURATRIB}/[ ]+[^>]+>{CIERRE} { apertura++; elementovacio++; tagsunomasatributos++;}
 {APERTURA}/{TEXTO}{CIERRE} { apertura++; elementosimple++;}
 {APERTURATRIB}/[ ]+[^>]+>{TEXTO}{CIERRE} { apertura++; elementosimple++; tagsunomasatributos++;}
-{APERTURATRIB}[ ]+ { apertura++; tagsunomasatributos++;}
 {CIERRE} { cierre++; }
 {ATRIBUTO} { atributo++; }
 {TEXTO}/<\/ { texto++; caracteres_texto += yyleng; }
